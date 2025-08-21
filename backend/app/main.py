@@ -2,17 +2,17 @@ from fastapi import FastAPI
 from app.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(title=settings.PROJECT_NAME)
 
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Разрешенные домены
+    allow_origins=["*"],  # Разрешенные домены
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/api/hellow")
-def hellow():
+@app.get("/api/home")
+def home():
     return {"status": "success", "message": "FastAPI is working!"}

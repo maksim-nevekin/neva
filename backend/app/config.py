@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "NEVA Project"
     API_V1_STR: str = "/api/v1"
@@ -8,9 +9,9 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-    POSTGRES_PORT: str = "5432"
+    POSTGRES_PORT: str
     
     class Config:
-        env_file = "../../.env"
+        env_file = "../.env"
 
 settings = Settings()
