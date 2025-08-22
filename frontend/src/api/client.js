@@ -1,12 +1,24 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8000/api/v1'
+// Базовый URL для API
+const API_BASE_URL = 'http://localhost:8000/api'
 
-const client = axios.create({
+// Создаем экземпляр axios
+const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 })
 
-export default client
+// Перехватчик для обработки ошибок
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message)
+    return Promise.reject(error)
+  }
+)
+
+export default apiClient
