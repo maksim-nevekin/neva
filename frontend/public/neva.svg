@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <path id="path-0" style="fill: none;" d="M 198.48 123.311 C 211.397 116.219 222.126 111.065 233.953 108.108 C 255.961 102.795 272.345 99.509 286.74 104.307 C 295.517 109.152 299.907 114.941 305.321 120.355 L 306.166 121.622 C 306.794 122.25 307.275 123.153 307.855 123.733"/>
+  </defs>
+  <text style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 29px; font-style: italic; font-weight: 700; text-anchor: middle; text-transform: uppercase; white-space: pre; transform-origin: 165.271px 119.591px;" transform="matrix(8.981621, 0.007317, -0.00961, 11.796797, 85.043472, 116.676811)" x="147.382" y="129.645">N</text>
+  <text style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 29px; font-style: italic; font-weight: 700; text-anchor: middle; text-transform: uppercase; white-space: pre; transform-origin: 152.334px 119.591px;" transform="matrix(8.981621, 0.007317, -0.00961, 11.796797, 97.980293, 116.579613)" x="147.382" y="129.645">E</text>
+  <text style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 29px; font-style: italic; font-weight: 700; text-anchor: middle; text-transform: uppercase; white-space: pre; transform-origin: 137.652px 119.591px;" transform="matrix(8.981621, 0.007317, -0.00961, 11.796797, 112.663116, 116.465469)" x="147.382" y="129.645">V</text>
+  <text style="fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 29px; font-style: italic; font-weight: 700; text-anchor: middle; text-transform: uppercase; white-space: pre; transform-origin: 129.493px 119.591px;" transform="matrix(8.981621, 0.007317, -0.00961, 11.796797, 120.821228, 116.421295)" x="147.382" y="129.645">A</text>
+</svg>

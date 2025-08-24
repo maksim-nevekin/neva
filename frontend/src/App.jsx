@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import HealthCheck from './components/Home'
+import Home from './components/Home'
 import './App.css'
 
 // Создаем клиент React Query
@@ -17,11 +17,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="App">
-        <h1>🚀 My React + FastAPI App</h1>
+        <h1>NEVA</h1>
         <p>Frontend is running successfully!</p>
         
         {/* Компонент для проверки подключения к бэкенду */}
-        <HealthCheck />
+        <Home />
       </div>
       
       <ReactQueryDevtools initialIsOpen={false} />
