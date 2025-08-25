@@ -1,9 +1,8 @@
 import axios from 'axios'
 
 // Базовый URL для API
-const API_BASE_URL = 'http://localhost:8000/api'
+const API_BASE_URL = '/api/v1'
 
-// Создаем экземпляр axios
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
