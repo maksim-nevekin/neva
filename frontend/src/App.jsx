@@ -1,31 +1,55 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import Home from './components/Home'
+import React, { useState } from 'react'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Login from './components/Auth/Login'
+import Register from './components/Auth/Register'
+import Header from './components/Layout/Header'
 import './App.css'
 
-// Создаем клиент React Query
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-})
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth()
+  const [isLogin, setIsLogin] = useState(true)
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <div>Загрузка...</div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div>
+        {isLogin ? (
+          <Login onSwitchToRegister={() => setIsLogin(false)} />
+        ) : (
+          <Register onSwitchToLogin={() => setIsLogin(true)} />
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <Header />
+      <div style={{ padding: '20px' }}>
+        <h1>🎉 Добро пожаловать в приложение!</h1>
+        <p>Вы успешно авторизованы!</p>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App">
-        <h1>NEVA</h1>
-        <p>Frontend is running successfully!</p>
-        
-        {/* Компонент для проверки подключения к бэкенду */}
-        <Home />
-      </div>
-      
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 
