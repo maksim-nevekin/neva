@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import toast from 'react-hot-toast'
 
-function Register({ onSwitchToLogin }) {
+function Register() {
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -10,7 +12,9 @@ function Register({ onSwitchToLogin }) {
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const { register } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -36,8 +40,21 @@ function Register({ onSwitchToLogin }) {
       password: formData.password
     })
 
-    if (!result.success) {
+    if (result.success) {
+      setSuccess(true)
+      // Show success toast
+      toast.success('🎉 Пользователь успешно создан! Перенаправление на главную страницу...', {
+        duration: 3000,
+      })
+      
+      // Redirect to home page after a short delay
+      setTimeout(() => {
+        navigate('/')
+      }, 2000)
+    } else {
       setError(result.error)
+      // Show error toast
+      toast.error(`Ошибка регистрации: ${result.error}`)
     }
 
     setLoading(false)
@@ -55,33 +72,29 @@ function Register({ onSwitchToLogin }) {
     }
   }
 
-  return (
-    <div style={{
-      maxWidth: '400px',
-      margin: '50px auto',
-      padding: '30px',
-      background: '#ffffff',
-      borderRadius: '10px',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-    }}>
-      <h2 style={{
-        textAlign: 'center',
-        marginBottom: '30px',
-        color: '#333'
-      }}>
-        📝 Регистрация
-      </h2>
+  // Show success message
+  if (success) {
+    return (
+      <div className="success-container">
+        <div className="success-icon">✅</div>
+        <h2 className="success-title">Регистрация успешна!</h2>
+        <p className="success-message">
+          Ваш аккаунт был создан. Перенаправление на главную страницу...
+        </p>
+        <div className="progress-container">
+          <div className="progress-bar" />
+        </div>
+      </div>
+    )
+  }
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '5px',
-            fontWeight: 'bold',
-            color: '#555'
-          }}>
-            Email
-          </label>
+  return (
+    <div className="auth-container">
+      <h2 className="auth-title">📝 Регистрация</h2>
+
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <label className="form-label">Email</label>
           <input
             type="email"
             name="email"
@@ -89,26 +102,12 @@ function Register({ onSwitchToLogin }) {
             value={formData.email}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '12px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              fontSize: '16px',
-              boxSizing: 'border-box'
-            }}
+            className="form-input"
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '5px',
-            fontWeight: 'bold',
-            color: '#555'
-          }}>
-            Имя пользователя
-          </label>
+        <div className="form-group">
+          <label className="form-label">Имя пользователя</label>
           <input
             type="text"
             name="username"
@@ -116,26 +115,12 @@ function Register({ onSwitchToLogin }) {
             value={formData.username}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '12px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              fontSize: '16px',
-              boxSizing: 'border-box'
-            }}
+            className="form-input"
           />
         </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '5px',
-            fontWeight: 'bold',
-            color: '#555'
-          }}>
-            Пароль
-          </label>
+        <div className="form-group">
+          <label className="form-label">Пароль</label>
           <input
             type="password"
             name="password"
@@ -143,26 +128,12 @@ function Register({ onSwitchToLogin }) {
             value={formData.password}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '12px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              fontSize: '16px',
-              boxSizing: 'border-box'
-            }}
+            className="form-input"
           />
         </div>
 
-        <div style={{ marginBottom: '25px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '5px',
-            fontWeight: 'bold',
-            color: '#555'
-          }}>
-            Подтверждение пароля
-          </label>
+        <div className="form-group">
+          <label className="form-label">Подтверждение пароля</label>
           <input
             type="password"
             name="confirmPassword"
@@ -170,87 +141,33 @@ function Register({ onSwitchToLogin }) {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '12px',
-              border: '1px solid #ddd',
-              borderRadius: '5px',
-              fontSize: '16px',
-              boxSizing: 'border-box'
-            }}
+            className="form-input"
           />
         </div>
 
         {error && (
-          <div style={{
-            color: '#d32f2f',
-            marginBottom: '20px',
-            padding: '10px',
-            background: '#ffebee',
-            borderRadius: '5px',
-            border: '1px solid #ffcdd2'
-          }}>
-            ⚠️ {error}
-          </div>
+          <div className="error-message">⚠️ {error}</div>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            background: loading ? '#ccc' : '#4caf50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            transition: 'background 0.3s'
-          }}
-          onMouseOver={(e) => {
-            if (!loading) e.target.style.background = '#45a049'
-          }}
-          onMouseOut={(e) => {
-            if (!loading) e.target.style.background = '#4caf50'
-          }}
+          className={`btn btn-success ${loading ? 'btn:disabled' : ''}`}
         >
           {loading ? 'Регистрация...' : 'Зарегистрироваться'}
         </button>
       </form>
 
-      <p style={{
-        marginTop: '25px',
-        textAlign: 'center',
-        color: '#666'
-      }}>
+      <p className="auth-switch">
         Уже есть аккаунт?{' '}
-        <button
-          onClick={onSwitchToLogin}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#2196f3',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-            textDecoration: 'underline'
-          }}
-        >
+        <Link to="/login" className="auth-link">
           Войти
-        </button>
+        </Link>
       </p>
 
-      <div style={{
-        marginTop: '30px',
-        padding: '15px',
-        background: '#f5f5f5',
-        borderRadius: '5px',
-        fontSize: '14px',
-        color: '#666'
-      }}>
+      <div className="password-requirements">
         <strong>Требования к паролю:</strong>
-        <ul style={{ margin: '10px 0 0 20px', padding: 0 }}>
+        <ul>
           <li>Минимум 6 символов</li>
           <li>Рекомендуется использовать буквы, цифры и специальные символы</li>
         </ul>

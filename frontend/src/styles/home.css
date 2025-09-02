@@ -1,0 +1,79 @@
+/* Home Page Styling */
+.home-container {
+  padding: 20px;
+}
+
+.home-welcome {
+  margin-bottom: 30px;
+}
+
+.home-title {
+  font-size: 32px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.home-subtitle {
+  font-size: 18px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.features-section {
+  margin-top: 30px;
+  padding: 25px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.features-title {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.features-list li {
+  padding: 8px 0;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 25px;
+}
+
+.features-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #28a745;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 15px;
+  }
+  
+  .home-title {
+    font-size: 28px;
+  }
+  
+  .home-subtitle {
+    font-size: 16px;
+  }
+  
+  .features-section {
+    padding: 20px;
+  }
+}

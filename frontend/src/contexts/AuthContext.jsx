@@ -58,6 +58,20 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         try {
             const response = await apiClient.post('/auth/register', userData)
+            
+            // Optionally, you can auto-login the user after successful registration
+            // Uncomment the following lines if you want to auto-login after registration
+            /*
+            if (response.data.access_token) {
+                const { access_token, refresh_token } = response.data
+                setToken(access_token)
+                Cookies.set('access_token', access_token, { expires: 1 })
+                Cookies.set('refresh_token', refresh_token, { expires: 7 })
+                apiClient.defaults.headers.Authorization = `Bearer ${access_token}`
+                await getCurrentUser()
+            }
+            */
+            
             return { success: true, data: response.data }
         } catch (error) {
             return {

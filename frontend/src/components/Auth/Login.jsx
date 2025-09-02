@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
+import toast from 'react-hot-toast'
 
-function Login({ onSwitchToRegister }) {
+function Login() {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -9,6 +11,7 @@ function Login({ onSwitchToRegister }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -19,6 +22,15 @@ function Login({ onSwitchToRegister }) {
 
     if (!result.success) {
       setError(result.error)
+      // Show error toast
+      toast.error(`Ошибка входа: ${result.error}`)
+    } else {
+      // Show success toast
+      toast.success('🎉 Вход выполнен успешно! Перенаправление...', {
+        duration: 2000,
+      })
+      // Redirect to home page after successful login
+      navigate('/')
     }
 
     setLoading(false)
@@ -29,65 +41,62 @@ function Login({ onSwitchToRegister }) {
       ...prev,
       [e.target.name]: e.target.value
     }))
+
+    // Clear error when user starts typing
+    if (error) {
+      setError('')
+    }
   }
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
-      <h2>🔐 Вход</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
+    <div className="auth-container">
+      <h2 className="auth-title">🔐 Вход в систему</h2>
+
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <label className="form-label">Email или Username</label>
           <input
             type="text"
             name="username"
-            placeholder="Email или username"
+            placeholder="Введите ваш email или username"
             value={formData.username}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '10px' }}
+            className="form-input"
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
+          <label className="form-label">Пароль</label>
           <input
             type="password"
             name="password"
-            placeholder="Пароль"
+            placeholder="Введите ваш пароль"
             value={formData.password}
             onChange={handleChange}
             required
-            style={{ width: '100%', padding: '10px' }}
+            className="form-input"
           />
         </div>
 
         {error && (
-          <div style={{ color: 'red', marginBottom: '15px' }}>
-            {error}
-          </div>
+          <div className="error-message">⚠️ {error}</div>
         )}
 
         <button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '10px',
-            background: '#007bff',
-            color: 'white',
-            border: 'none'
-          }}
+          className={`btn btn-primary ${loading ? 'btn:disabled' : ''}`}
         >
           {loading ? 'Вход...' : 'Войти'}
         </button>
       </form>
 
-      <p style={{ marginTop: '20px', textAlign: 'center' }}>
+      <p className="auth-switch">
         Нет аккаунта?{' '}
-        <button
-          onClick={onSwitchToRegister}
-          style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer' }}
-        >
+        <Link to="/register" className="auth-link">
           Зарегистрироваться
-        </button>
+        </Link>
       </p>
     </div>
   )
