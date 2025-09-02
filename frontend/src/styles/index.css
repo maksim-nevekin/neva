@@ -1,7 +1,11 @@
 /* Main Styles Import */
+@import './themes.css';
+@import './animations.css';
 @import './auth.css';
 @import './home.css';
 @import './header.css';
+@import './components.css';
+@import './neva.css';
 
 /* Global Styles */
 * {
@@ -15,15 +19,68 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
   line-height: 1.6;
 }
 
-/* Utility Classes */
-.text-center {
-  text-align: center;
+/* NEVA Brand Colors */
+:root {
+  --neva-primary: #2196f3;
+  --neva-primary-dark: #1976d2;
+  --neva-primary-light: #bbdefb;
+  
+  --neva-success: #4caf50;
+  --neva-success-dark: #388e3c;
+  --neva-success-light: #c8e6c9;
+  
+  --neva-warning: #ff9800;
+  --neva-warning-dark: #f57c00;
+  --neva-warning-light: #ffe0b2;
+  
+  --neva-error: #d32f2f;
+  --neva-error-dark: #c62828;
+  --neva-error-light: #ffcdd2;
+  
+  --neva-info: #00bcd4;
+  --neva-info-dark: #0097a7;
+  --neva-info-light: #b2ebf2;
+  
+  --neva-gray-50: #fafafa;
+  --neva-gray-100: #f5f5f5;
+  --neva-gray-200: #eeeeee;
+  --neva-gray-300: #e0e0e0;
+  --neva-gray-400: #bdbdbd;
+  --neva-gray-500: #9e9e9e;
+  --neva-gray-600: #757575;
+  --neva-gray-700: #616161;
+  --neva-gray-800: #424242;
+  --neva-gray-900: #212121;
+  
+  --neva-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --neva-gradient-success: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  --neva-gradient-warning: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+  
+  --neva-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --neva-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --neva-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --neva-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --neva-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  
+  --neva-border-radius: 8px;
+  --neva-border-radius-md: 12px;
+  --neva-border-radius-lg: 16px;
+  --neva-border-radius-xl: 20px;
+  
+  --neva-transition: all 0.3s ease;
+  --neva-transition-fast: all 0.15s ease;
+  --neva-transition-slow: all 0.5s ease;
 }
+
+/* Utility Classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
 
 .mb-0 { margin-bottom: 0; }
 .mb-1 { margin-bottom: 0.25rem; }
@@ -39,6 +96,13 @@ body {
 .mt-4 { margin-top: 1.5rem; }
 .mt-5 { margin-top: 3rem; }
 
+.p-0 { padding: 0; }
+.p-1 { padding: 0.25rem; }
+.p-2 { padding: 0.5rem; }
+.p-3 { padding: 1rem; }
+.p-4 { padding: 1.5rem; }
+.p-5 { padding: 3rem; }
+
 /* Loading States */
 .loading {
   display: flex;
@@ -46,7 +110,7 @@ body {
   align-items: center;
   height: 100vh;
   font-size: 18px;
-  color: #666;
+  color: var(--theme-text-secondary);
 }
 
 /* Focus States for Accessibility */
@@ -54,11 +118,99 @@ button:focus,
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid #2196f3;
+  outline: 2px solid var(--neva-primary);
   outline-offset: 2px;
 }
 
 /* Smooth Transitions */
 * {
   transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* NEVA Specific Utilities */
+.neva-gradient-primary {
+  background: var(--neva-gradient-primary);
+}
+
+.neva-gradient-success {
+  background: var(--neva-gradient-success);
+}
+
+.neva-gradient-warning {
+  background: var(--neva-gradient-warning);
+}
+
+.neva-shadow {
+  box-shadow: var(--neva-shadow);
+}
+
+.neva-shadow-lg {
+  box-shadow: var(--neva-shadow-lg);
+}
+
+.neva-rounded {
+  border-radius: var(--neva-border-radius);
+}
+
+.neva-rounded-lg {
+  border-radius: var(--neva-border-radius-lg);
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from { 
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .card,
+  .dashboard-widget,
+  .transfer-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
 }
