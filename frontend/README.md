@@ -30,14 +30,20 @@ This React frontend includes a complete authentication system with the following
 - **CSS Modules**: Organized, maintainable styling structure
 - **Responsive Design**: Mobile-first approach with media queries
 - **Accessibility**: Proper focus states and keyboard navigation
+- **Theme Support**: Light, dark, and high-contrast themes
+- **Advanced Animations**: Micro-animations and smooth transitions
 
 ### 📁 **CSS File Structure**
 ```
 src/styles/
-├── index.css          # Main stylesheet with imports and global styles
-├── auth.css           # Authentication forms styling
-├── home.css           # Home page component styling
-└── header.css         # Header component styling
+├── index.css              # Main stylesheet with imports and global styles
+├── themes.css             # Theme definitions (light, dark, high-contrast)
+├── animations.css         # Advanced animations and micro-interactions
+├── components.css         # Common reusable components
+├── auth.css               # Authentication forms styling
+├── home.css               # Home page component styling
+├── header.css             # Header component styling
+└── neva.css               # NEVA platform specific components
 ```
 
 ### 🚫 **Why Not Inline Styles?**
@@ -46,6 +52,20 @@ src/styles/
 - **CSS Features**: Can't use pseudo-selectors, media queries, animations
 - **Code Readability**: JSX becomes cluttered and hard to read
 - **Bundle Size**: Inline styles increase JavaScript bundle size
+
+### 🌈 **Theme System**
+- **Light Theme**: Default modern design
+- **Dark Theme**: Easy on the eyes for low-light environments
+- **High Contrast**: Accessibility-focused design
+- **Automatic Switching**: Respects user's system preferences
+- **Smooth Transitions**: Seamless theme changes
+
+### ✨ **Animation System**
+- **Micro-animations**: Hover effects, button interactions
+- **Entrance Animations**: Fade-in, slide-in effects
+- **Loading States**: Spinners, progress bars, skeletons
+- **Performance Optimized**: Hardware acceleration and reduced motion support
+- **Customizable**: Easy to adjust timing and easing
 
 ## How It Works
 
@@ -85,9 +105,13 @@ src/
 │   └── AuthContext.jsx        # Authentication state management
 ├── styles/
 │   ├── index.css              # Main stylesheet with imports
+│   ├── themes.css             # Theme definitions
+│   ├── animations.css         # Animation system
+│   ├── components.css         # Common components
 │   ├── auth.css               # Authentication styles
 │   ├── home.css               # Home page styles
-│   └── header.css             # Header styles
+│   ├── header.css             # Header styles
+│   └── neva.css               # NEVA platform styles
 ├── api/
 │   └── client.js              # API client configuration
 └── App.jsx                    # Main application component
@@ -121,7 +145,31 @@ Modify component styles in their respective CSS files:
 - **Authentication forms**: `src/styles/auth.css`
 - **Home page**: `src/styles/home.css`
 - **Header**: `src/styles/header.css`
+- **Common components**: `src/styles/components.css`
+- **NEVA platform**: `src/styles/neva.css`
 - **Global styles**: `src/styles/index.css`
+
+### Theme Customization
+Modify themes in `src/styles/themes.css`:
+```css
+[data-theme="custom"] {
+  --theme-bg-primary: #your-color;
+  --theme-text-primary: #your-color;
+  /* ... other variables */
+}
+```
+
+### Animation Customization
+Adjust animations in `src/styles/animations.css`:
+```css
+.animate-custom {
+  animation: customAnimation 1s ease-out;
+}
+
+@keyframes customAnimation {
+  /* your keyframes */
+}
+```
 
 ### Toast Notifications
 Modify toast options in `App.jsx`:
@@ -165,12 +213,39 @@ if (response.data.access_token) {
 - Use CSS custom properties for consistent theming
 - Follow BEM methodology for complex components
 - Keep CSS files focused and single-purpose
+- Leverage CSS variables for easy theme switching
+- Use modern CSS features (Grid, Flexbox, Custom Properties)
 
 ### ❌ **Don'ts**
 - Avoid inline styles in JSX
 - Don't use !important unless absolutely necessary
 - Avoid deeply nested selectors
 - Don't mix styling approaches
+- Don't ignore accessibility considerations
+- Avoid hardcoded colors and values
+
+## Advanced Features
+
+### 🎨 **Component Library**
+- **Cards**: Flexible card components with headers, content, and footers
+- **Buttons**: Multiple button styles with hover effects and states
+- **Forms**: Comprehensive form styling with validation states
+- **Alerts**: Status-based alert components
+- **Badges**: Color-coded status indicators
+- **Loading States**: Various loading animations and skeletons
+
+### 📱 **Responsive Design**
+- **Mobile First**: Base styles for mobile devices
+- **Breakpoints**: Consistent breakpoints across components
+- **Flexible Grids**: CSS Grid and Flexbox layouts
+- **Touch Friendly**: Optimized for touch interactions
+
+### ♿ **Accessibility**
+- **Focus States**: Clear focus indicators
+- **Color Contrast**: WCAG compliant color combinations
+- **Reduced Motion**: Respects user preferences
+- **Screen Reader**: Semantic HTML structure
+- **Keyboard Navigation**: Full keyboard support
 
 ## Backend Integration
 
@@ -180,3 +255,17 @@ This frontend expects a FastAPI backend with the following endpoints:
 - `GET /auth/me` - Get current user info
 
 Ensure your backend returns appropriate JWT tokens and user data for seamless integration.
+
+## Performance Optimization
+
+### 🚀 **CSS Optimization**
+- **CSS Variables**: Efficient theme switching
+- **Hardware Acceleration**: GPU-accelerated animations
+- **Reduced Repaints**: Optimized transitions
+- **Bundle Splitting**: Component-specific stylesheets
+
+### 📊 **Loading Performance**
+- **Critical CSS**: Inline critical styles
+- **Lazy Loading**: Load non-critical styles asynchronously
+- **Tree Shaking**: Remove unused CSS
+- **Minification**: Compressed production builds
