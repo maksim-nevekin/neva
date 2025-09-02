@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.db import create_tables
-from app.api.routes import auth, users
+from app.api.routes import auth, users, profiles
 
 # Создаем таблицы при запуске
 create_tables()
@@ -27,6 +27,7 @@ app.add_middleware(
 # Подключаем роуты
 app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(users.router, prefix=settings.API_V1_STR)
+app.include_router(profiles.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def read_root():

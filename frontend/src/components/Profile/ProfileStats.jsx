@@ -1,246 +1,256 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { apiClient } from '../../utils/apiClient'
 
 function ProfileStats({ profile }) {
+  const [stats, setStats] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const statsData = await apiClient.getProfileStats()
+        setStats(statsData)
+      } catch (err) {
+        console.error('Stats loading error:', err)
+        // Используем дефолтные значения при ошибке
+        setStats({
+          profile_views: 0,
+          transfer_requests: 0,
+          successful_transfers: 0,
+          rating: profile.rating || null,
+          last_activity: profile.last_activity
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchStats()
+  }, [profile])
+
   const renderEmployeeStats = () => (
-    <div className="profile-stats-content">
+    <>
       <div className="stats-section">
-        <h3 className="stats-section-title">📊 Статистика профиля</h3>
-        
+        <h3 className="stats-section-title">
+          📊 Статистика профиля
+        </h3>
         <div className="stat-card">
           <div className="stat-icon">👁️</div>
           <div className="stat-content">
-            <div className="stat-value">1,247</div>
-            <div className="stat-label">Просмотров профиля</div>
+            <span className="stat-value">{stats?.profile_views || 0}</span>
+            <span className="stat-label">Просмотров профиля</span>
           </div>
         </div>
-
         <div className="stat-card">
-          <div className="stat-icon">📋</div>
+          <div className="stat-icon">📨</div>
           <div className="stat-content">
-            <div className="stat-value">{profile.transferHistory?.length || 0}</div>
-            <div className="stat-label">Трансферов</div>
+            <span className="stat-value">{stats?.transfer_requests || 0}</span>
+            <span className="stat-label">Запросов на перевод</span>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">⭐</div>
-          <div className="stat-content">
-            <div className="stat-value">4.8</div>
-            <div className="stat-label">Рейтинг</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">💼</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.experience}</div>
-            <div className="stat-label">Опыт работы</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="stats-section">
-        <h3 className="stats-section-title">🎯 Активность</h3>
-        
-        <div className="activity-item">
-          <div className="activity-icon">📅</div>
-          <div className="activity-content">
-            <div className="activity-label">Последнее обновление</div>
-            <div className="activity-value">2 дня назад</div>
-          </div>
-        </div>
-
-        <div className="activity-item">
-          <div className="activity-icon">🔍</div>
-          <div className="activity-content">
-            <div className="activity-label">Поиск работы</div>
-            <div className="activity-value">Активен</div>
-          </div>
-        </div>
-
-        <div className="activity-item">
-          <div className="activity-icon">📱</div>
-          <div className="activity-content">
-            <div className="activity-label">Онлайн статус</div>
-            <div className="activity-value">Онлайн</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderCompanyStats = () => (
-    <div className="profile-stats-content">
-      <div className="stats-section">
-        <h3 className="stats-section-title">📊 Статистика компании</h3>
-        
-        <div className="stat-card">
-          <div className="stat-icon">👥</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.size}</div>
-            <div className="stat-label">Размер команды</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">💼</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.openPositions}</div>
-            <div className="stat-label">Открытых вакансий</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">🔄</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.transferRequests}</div>
-            <div className="stat-label">Запросов на трансфер</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">📈</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.successRate}%</div>
-            <div className="stat-label">Успешных трансферов</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">⭐</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.rating}</div>
-            <div className="stat-label">Рейтинг ({profile.reviews} отзывов)</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="stats-section">
-        <h3 className="stats-section-title">🏢 Информация о компании</h3>
-        
-        <div className="company-info-item">
-          <div className="info-icon">🏗️</div>
-          <div className="info-content">
-            <div className="info-label">Основана</div>
-            <div className="info-value">{profile.founded}</div>
-          </div>
-        </div>
-
-        <div className="company-info-item">
-          <div className="info-icon">📍</div>
-          <div className="info-content">
-            <div className="info-label">Локация</div>
-            <div className="info-value">{profile.location}</div>
-          </div>
-        </div>
-
-        <div className="company-info-item">
-          <div className="info-icon">🌐</div>
-          <div className="info-content">
-            <div className="info-label">Веб-сайт</div>
-            <div className="info-value">
-              <a href={profile.website} target="_blank" rel="noopener noreferrer">
-                Открыть
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
-  const renderAgentStats = () => (
-    <div className="profile-stats-content">
-      <div className="stats-section">
-        <h3 className="stats-section-title">📊 Статистика агента</h3>
-        
-        <div className="stat-card">
-          <div className="stat-icon">🎯</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.successRate}%</div>
-            <div className="stat-label">Успешных трансферов</div>
-          </div>
-        </div>
-
         <div className="stat-card">
           <div className="stat-icon">✅</div>
           <div className="stat-content">
-            <div className="stat-value">{profile.completedTransfers}</div>
-            <div className="stat-label">Завершенных трансферов</div>
+            <span className="stat-value">{stats?.successful_transfers || 0}</span>
+            <span className="stat-label">Успешных переводов</span>
           </div>
         </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">🔄</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.activeTransfers}</div>
-            <div className="stat-label">Активных трансферов</div>
+        {stats?.rating && (
+          <div className="stat-card">
+            <div className="stat-icon">⭐</div>
+            <div className="stat-content">
+              <span className="stat-value">{stats.rating}</span>
+              <span className="stat-label">Рейтинг</span>
+            </div>
           </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">⭐</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.rating}</div>
-            <div className="stat-label">Рейтинг ({profile.reviews} отзывов)</div>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">💼</div>
-          <div className="stat-content">
-            <div className="stat-value">{profile.experience}</div>
-            <div className="stat-label">Опыт работы</div>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="stats-section">
-        <h3 className="stats-section-title">📅 Доступность</h3>
-        
-        <div className="availability-item">
-          <div className="availability-icon">🕐</div>
-          <div className="availability-content">
-            <div className="availability-label">Рабочие часы</div>
-            <div className="availability-value">{profile.availability}</div>
+        <h3 className="stats-section-title">
+          🕒 Активность
+        </h3>
+        <div className="activity-item">
+          <div className="activity-icon">🕐</div>
+          <div className="activity-content">
+            <span className="activity-label">Последняя активность</span>
+            <span className="activity-value">
+              {new Date(stats?.last_activity || profile.last_activity).toLocaleDateString('ru-RU')}
+            </span>
           </div>
         </div>
-
-        <div className="availability-item">
-          <div className="availability-icon">🌍</div>
-          <div className="availability-content">
-            <div className="availability-label">Часовой пояс</div>
-            <div className="availability-value">MSK (UTC+3)</div>
-          </div>
-        </div>
-
-        <div className="availability-item">
-          <div className="availability-icon">📱</div>
-          <div className="availability-content">
-            <div className="availability-label">Ответ в течение</div>
-            <div className="availability-value">2-4 часов</div>
+        <div className="activity-item">
+          <div className="activity-icon">📅</div>
+          <div className="activity-content">
+            <span className="activity-label">Профиль создан</span>
+            <span className="activity-value">
+              {new Date(profile.created_at).toLocaleDateString('ru-RU')}
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 
-  const renderStats = () => {
-    switch (profile.type) {
-      case 'employee':
-        return renderEmployeeStats()
-      case 'company':
-        return renderCompanyStats()
-      case 'agent':
-        return renderAgentStats()
-      default:
-        return renderEmployeeStats()
-    }
+  const renderCompanyStats = () => (
+    <>
+      <div className="stats-section">
+        <h3 className="stats-section-title">
+          📊 Статистика компании
+        </h3>
+        <div className="stat-card">
+          <div className="stat-icon">👁️</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.profile_views || 0}</span>
+            <span className="stat-label">Просмотров профиля</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">🔄</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.transfer_requests || 0}</span>
+            <span className="stat-label">Активных переводов</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">✅</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.successful_transfers || 0}</span>
+            <span className="stat-label">Успешных переводов</span>
+          </div>
+        </div>
+        {stats?.rating && (
+          <div className="stat-card">
+            <div className="stat-icon">⭐</div>
+            <div className="stat-content">
+              <span className="stat-value">{stats.rating}</span>
+              <span className="stat-label">Средний рейтинг</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="stats-section">
+        <h3 className="stats-section-title">
+          🏢 Информация о компании
+        </h3>
+        <div className="company-info-item">
+          <div className="info-icon">📅</div>
+          <div className="info-content">
+            <span className="info-label">Год основания</span>
+            <span className="info-value">
+              {profile.founded_year || 'Не указан'}
+            </span>
+          </div>
+        </div>
+        <div className="company-info-item">
+          <div className="info-icon">👥</div>
+          <div className="info-content">
+            <span className="info-label">Размер компании</span>
+            <span className="info-value">
+              {profile.company_size || 'Не указан'}
+            </span>
+          </div>
+        </div>
+        <div className="company-info-item">
+          <div className="info-icon">🏭</div>
+          <div className="info-content">
+            <span className="info-label">Отрасль</span>
+            <span className="info-value">
+              {profile.industry || 'Не указана'}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
+  const renderAgentStats = () => (
+    <>
+      <div className="stats-section">
+        <h3 className="stats-section-title">
+          📊 Статистика агента
+        </h3>
+        <div className="stat-card">
+          <div className="stat-icon">👁️</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.profile_views || 0}</span>
+            <span className="stat-label">Просмотров профиля</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">🔄</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.transfer_requests || 0}</span>
+            <span className="stat-label">Активных переводов</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">✅</div>
+          <div className="stat-content">
+            <span className="stat-value">{stats?.successful_transfers || 0}</span>
+            <span className="stat-label">Успешных переводов</span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">📈</div>
+          <div className="stat-content">
+            <span className="stat-value">{profile.success_rate || 0}%</span>
+            <span className="stat-label">Успешность</span>
+          </div>
+        </div>
+        {profile.rating && (
+          <div className="stat-card">
+            <div className="stat-icon">⭐</div>
+            <div className="stat-content">
+              <span className="stat-value">{profile.rating}/5</span>
+              <span className="stat-label">Рейтинг</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="stats-section">
+        <h3 className="stats-section-title">
+          🕒 Доступность
+        </h3>
+        <div className="availability-item">
+          <div className="availability-icon">🟢</div>
+          <div className="availability-content">
+            <span className="availability-label">Статус</span>
+            <span className="availability-value">
+              {profile.status === 'available' ? 'Доступен' : 'Недоступен'}
+            </span>
+          </div>
+        </div>
+        <div className="availability-item">
+          <div className="availability-icon">🕐</div>
+          <div className="availability-content">
+            <span className="availability-label">Последняя активность</span>
+            <span className="availability-value">
+              {new Date(stats?.last_activity || profile.last_activity).toLocaleDateString('ru-RU')}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+
+  if (loading) {
+    return (
+      <div className="profile-stats">
+        <div className="loading-spinner"></div>
+      </div>
+    )
   }
 
   return (
     <div className="profile-stats">
-      {renderStats()}
+      <div className="profile-stats-content">
+        {profile.profile_type === 'employee' && renderEmployeeStats()}
+        {profile.profile_type === 'company' && renderCompanyStats()}
+        {profile.profile_type === 'agent' && renderAgentStats()}
+      </div>
     </div>
   )
 }

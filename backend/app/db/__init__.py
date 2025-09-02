@@ -3,6 +3,7 @@ from .session import engine, get_db, SessionLocal
 
 # Импорт моделей чтобы они регистрировались у Base
 from app.models.user import User
+from app.models.profile import Profile
 
 
 # Функция для создания таблиц

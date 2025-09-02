@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
-import apiClient from '../api/client'
+import { apiClient } from '../utils/apiClient'
 import Cookies from 'js-cookie'
 
 const AuthContext = createContext()
@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
-            apiClient.defaults.headers.Authorization = `Bearer ${token}`
             getCurrentUser()
         } else {
             setLoading(false)
@@ -28,22 +27,13 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (username, password) => {
         try {
-            const formData = new FormData()
-            formData.append('username', username)
-            formData.append('password', password)
-
-            const response = await apiClient.post('/auth/login', formData, {
-                headers: {
-                  'Content-Type': 'multipart/form-data' // Важно для FastAPI OAuth2
-                }
-            })
-            const { access_token, refresh_token } = response.data
+            const response = await apiClient.login(username, password)
+            const { access_token, refresh_token } = response
 
             setToken(access_token)
             Cookies.set('access_token', access_token, { expires: 1 })
             Cookies.set('refresh_token', refresh_token, { expires: 7 })
-
-            apiClient.defaults.headers.Authorization = `Bearer ${access_token}`
+            localStorage.setItem('access_token', access_token)
 
             await getCurrentUser()
             return { success: true }
@@ -57,26 +47,38 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const response = await apiClient.post('/auth/register', userData)
+            const response = await apiClient.register(userData)
             
-            // Optionally, you can auto-login the user after successful registration
-            // Uncomment the following lines if you want to auto-login after registration
-            /*
-            if (response.data.access_token) {
-                const { access_token, refresh_token } = response.data
+            // Автоматически логиним пользователя после регистрации
+            try {
+                const loginResponse = await apiClient.login(userData.email, userData.password)
+                const { access_token, refresh_token } = loginResponse
+                
                 setToken(access_token)
                 Cookies.set('access_token', access_token, { expires: 1 })
                 Cookies.set('refresh_token', refresh_token, { expires: 7 })
-                apiClient.defaults.headers.Authorization = `Bearer ${access_token}`
+                localStorage.setItem('access_token', access_token)
+                
                 await getCurrentUser()
+                
+                // Автоматически создаем пустой профиль для нового пользователя
+                try {
+                    await apiClient.createEmptyProfile('employee')
+                } catch (profileError) {
+                    console.warn('Failed to create profile:', profileError)
+                    // Не прерываем регистрацию, если не удалось создать профиль
+                }
+                
+            } catch (loginError) {
+                console.warn('Auto-login failed after registration:', loginError)
+                // Регистрация прошла успешно, но автологин не удался
             }
-            */
             
-            return { success: true, data: response.data }
+            return { success: true, data: response }
         } catch (error) {
             return {
                 success: false,
-                error: error.response?.data?.detail || 'Registration failed'
+                error: error.message || 'Registration failed'
             }
         }
     }
@@ -86,13 +88,13 @@ export const AuthProvider = ({ children }) => {
         setUser(null)
         Cookies.remove('access_token')
         Cookies.remove('refresh_token')
-        delete apiClient.defaults.headers.Authorization
+        localStorage.removeItem('access_token')
     }
 
     const getCurrentUser = async () => {
         try {
-            const response = await apiClient.get('/auth/me')
-            setUser(response.data)
+            const response = await apiClient.getCurrentUser()
+            setUser(response)
         } catch (error) {
             logout()
         } finally {
